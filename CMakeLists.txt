@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(stb VERSION 0.9.0)
 
-file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/*.h)
-file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/*.c)
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -16,8 +16,9 @@ else()
     endif()
 endif()
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
-target_link_directories(${PROJECT_NAME} ${HEADERS})
 
 install(FILES ${HEADERS} DESTINATION include/${PROJECT_NAME})
 install(TARGETS ${PROJECT_NAME}
