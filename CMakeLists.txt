@@ -84,6 +84,12 @@ if(STB_IMAGE)
     install(TARGETS stb_image EXPORT stbTargets)
     install(FILES include/stb/stb_image.h DESTINATION include/stb)
 
+    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+        # Install .pdb files if using MSVC
+        message("Installing pdb file...")
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_image.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+    endif()
+
 endif(STB_IMAGE)
 
 #########################################################################################
@@ -99,6 +105,12 @@ if(STB_TRUETYPE)
 
     install(TARGETS stb_truetype EXPORT stbTargets)
     install(FILES include/stb/stb_truetype.h DESTINATION include/stb)
+
+    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+        # Install .pdb files if using MSVC
+        message("Installing pdb file...")
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_truetype.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+    endif()
 endif(STB_IMAGE)
 
 #########################################################################################
@@ -114,6 +126,12 @@ if(STB_TRUETYPE)
 
     install(TARGETS stb_rect_pack EXPORT stbTargets)
     install(FILES include/stb/stb_rect_pack.h DESTINATION include/stb)
+
+    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+        # Install .pdb files if using MSVC
+        message("Installing pdb file...")
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_rect_pack.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+    endif()
 endif(STB_IMAGE)
 
 #########################################################################################
