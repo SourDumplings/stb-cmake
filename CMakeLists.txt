@@ -133,30 +133,3 @@ if(STB_TRUETYPE)
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_rect_pack.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
     endif()
 endif(STB_IMAGE)
-
-#########################################################################################
-# Package Configuration
-#########################################################################################
-# Helpers functions for creating config files that can be included by other projects
-include(CMakePackageConfigHelpers)
-
-# Dummy target for generating export stbTargets even if no stb target was enabled
-add_library(none INTERFACE)
-install(TARGETS none EXPORT stbTargets)
-
-# Create config package
-configure_package_config_file(
-    "Config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake"
-    INSTALL_DESTINATION "lib/cmake/stb")
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
-    COMPATIBILITY SameMajorVersion)
-
-# Install config package
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
-        DESTINATION "lib/cmake/stb")
-install(EXPORT "stbTargets"
-        NAMESPACE "stb::"
-        DESTINATION "lib/cmake/stb")
