@@ -1,135 +1,33 @@
 cmake_minimum_required(VERSION 3.5)
 project(stb VERSION 0.9.0)
 
-#########################################################################################
-# STB Image
-#########################################################################################
-option(STB_IMAGE "Compile and export stb_image.h" ON)
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/*.h)
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/*.c)
 
-# Suppress system IO interfacing code
-option(STBI_NO_STDIO "" OFF)
-# Suppress implementation of .hdr reader format
-option(STBI_NO_HDR "" OFF)
-# Suppress high-dynamic-range light-linear float API
-option(STBI_NO_LINEAR "" OFF)
-
-# You can suppress implementation of any of the decoders to reduce
-# your code footprint by defining one or more of the following
-# symbols before creating the implementation
-option(STBI_NO_JPEG "" OFF)
-option(STBI_NO_PNG "" OFF)
-option(STBI_NO_BMP "" OFF)
-option(STBI_NO_PSD "" OFF)
-option(STBI_NO_TGA "" OFF)
-option(STBI_NO_GIF "" OFF)
-option(STBI_NO_HDR "" OFF)
-option(STBI_NO_PIC "" OFF)
-option(STBI_NO_PNM "" OFF) #(.ppm and .pgm)
-
-# You can request *only* certain decoders and suppress all other ones
-# (this will be more forward-compatible, as addition of new decoders
-# doesn't require you to disable them explicitly):
-option(STBI_ONLY_JPEG "" OFF)
-option(STBI_ONLY_PNG "" OFF)
-option(STBI_ONLY_BMP "" OFF)
-option(STBI_ONLY_PSD "" OFF)
-option(STBI_ONLY_TGA "" OFF)
-option(STBI_ONLY_GIF "" OFF)
-option(STBI_ONLY_HDR "" OFF)
-option(STBI_ONLY_PIC "" OFF)
-option(STBI_ONLY_PNM "" OFF) #(.ppm and .pgm)
-
-# If you use STBI_NO_PNG (or _ONLY_ without PNG), and you still
-# want the zlib decoder to be available, define STBI_SUPPORT_ZLIB.
-option(STBI_SUPPORT_ZLIB "" OFF)
-
-# Compilation of all SIMD code can be suppressed with
-option(STBI_NO_SIMD "" OFF)
-
-# If you must produce consistent results with previous versions of stb_image
-option(STBI_JPEG_OLD "" OFF)
-
-# STB Image target
-if(STB_IMAGE)
-    add_library(stb_image STATIC src/stb_image.c)
-    target_include_directories(stb_image PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>")
-    target_compile_definitions(stb_image PUBLIC 
-        STB_IMAGE
-        $<$<BOOL:${STBI_NO_STDIO}>:STBI_NO_STDIO>
-        $<$<BOOL:${STBI_NO_HDR}>:STBI_NO_HDR>
-        $<$<BOOL:${STBI_NO_LINEAR}>:STBI_NO_LINEAR>
-        $<$<BOOL:${STBI_NO_JPEG}>:STBI_NO_JPEG>
-        $<$<BOOL:${STBI_NO_PNG}>:STBI_NO_PNG>
-        $<$<BOOL:${STBI_NO_BMP}>:STBI_NO_BMP>
-        $<$<BOOL:${STBI_NO_PSD}>:STBI_NO_PSD>
-        $<$<BOOL:${STBI_NO_TGA}>:STBI_NO_TGA>
-        $<$<BOOL:${STBI_NO_GIF}>:STBI_NO_GIF>
-        $<$<BOOL:${STBI_NO_HDR}>:STBI_NO_HDR>
-        $<$<BOOL:${STBI_NO_PIC}>:STBI_NO_PIC>
-        $<$<BOOL:${STBI_NO_PNM}>:STBI_NO_PNM>
-        $<$<BOOL:${STBI_ONLY_JPEG}>:STBI_ONLY_JPEG>
-        $<$<BOOL:${STBI_ONLY_PNG}>:STBI_ONLY_PNG>
-        $<$<BOOL:${STBI_ONLY_BMP}>:STBI_ONLY_BMP>
-        $<$<BOOL:${STBI_ONLY_PSD}>:STBI_ONLY_PSD>
-        $<$<BOOL:${STBI_ONLY_TGA}>:STBI_ONLY_TGA>
-        $<$<BOOL:${STBI_ONLY_GIF}>:STBI_ONLY_GIF>
-        $<$<BOOL:${STBI_ONLY_HDR}>:STBI_ONLY_HDR>
-        $<$<BOOL:${STBI_ONLY_PIC}>:STBI_ONLY_PIC>
-        $<$<BOOL:${STBI_ONLY_PNM}>:STBI_ONLY_PNM>
-        $<$<BOOL:${STBI_SUPPORT_ZLIB}>:STBI_SUPPORT_ZLIB>
-        $<$<BOOL:${STBI_NO_SIMD}>:STBI_NO_SIMD>
-        $<$<BOOL:${STBI_JPEG_OLD}>:STBI_JPEG_OLD>)
-
-    install(TARGETS stb_image EXPORT stbTargets)
-    install(FILES include/stb/stb_image.h DESTINATION include/stb)
-
-    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
-        # Install .pdb files if using MSVC
-        message("Installing pdb file...")
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_image.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_PREFIX_PATH}" CACHE PATH "Install path prefix" FORCE)
+    else()
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist" CACHE PATH "Install path prefix" FORCE)
     endif()
-
-endif(STB_IMAGE)
-
-#########################################################################################
-# STB TrueType
-#########################################################################################
-option(STB_TRUETYPE "Compile and export stb_truetype.h" ON)
-
-# STB TrueType target
-if(STB_TRUETYPE)
-    add_library(stb_truetype STATIC src/stb_truetype.c)
-    target_include_directories(stb_truetype PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>")
-
-    install(TARGETS stb_truetype EXPORT stbTargets)
-    install(FILES include/stb/stb_truetype.h DESTINATION include/stb)
-
-    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
-        # Install .pdb files if using MSVC
-        message("Installing pdb file...")
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_truetype.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+else()
+    if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_PREFIX_PATH}" CACHE PATH "Install path prefix" FORCE)
     endif()
-endif(STB_IMAGE)
+endif()
 
-#########################################################################################
-# STB RectPack
-#########################################################################################
-option(STB_TRUETYPE "Compile and export stb_rect_pack.h" ON)
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+target_link_directories(${PROJECT_NAME} ${HEADERS})
 
-# STB TrueType target
-if(STB_TRUETYPE)
-    add_library(stb_rect_pack STATIC src/stb_rect_pack.c)
-    target_include_directories(stb_rect_pack PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>")
+install(FILES ${HEADERS} DESTINATION include/${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION ${intermediate_bin_dir}    # .dll
+    ARCHIVE DESTINATION ${CMAKE_LIBRARY_PATH}      # .lib
+    LIBRARY DESTINATION ${CMAKE_LIBRARY_PATH}      # .so or .dylib
+)
 
-    install(TARGETS stb_rect_pack EXPORT stbTargets)
-    install(FILES include/stb/stb_rect_pack.h DESTINATION include/stb)
-
-    if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
-        # Install .pdb files if using MSVC
-        message("Installing pdb file...")
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/stb_rect_pack.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
-    endif()
-endif(STB_IMAGE)
+if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+    # Install .pdb files if using MSVC
+    message("Installing pdb file...")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/${PROJECT_NAME}.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+endif()
