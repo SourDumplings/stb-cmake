@@ -26,9 +26,3 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION ${CMAKE_LIBRARY_PATH}      # .lib
     LIBRARY DESTINATION ${CMAKE_LIBRARY_PATH}      # .so or .dylib
 )
-
-if (MSVC AND ${CMAKE_BUILD_TYPE} MATCHES "Debug")
-    # Install .pdb files if using MSVC
-    message("Installing pdb file...")
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/${PROJECT_NAME}.pdb DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
-endif()
